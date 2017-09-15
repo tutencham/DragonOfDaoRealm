@@ -19,16 +19,40 @@ import io.realm.Sort;
 public class NoteDao {
 
 
+
+
+
     private Realm realm;
     private RealmConfiguration realmConfig;
 
 
+
+    private static NoteDao ourInstance;
+
     public NoteDao(Context context){
         realmConfig= new RealmConfiguration.Builder(context).build();
-        realm = Realm.getInstance(realmConfig);
-
-
+          realm = Realm.getInstance(realmConfig);
+          realm=Realm.getDefaultInstance();
     }
+
+    public static NoteDao getInstance(Context context) {
+        if(ourInstance==null){
+            ourInstance = new NoteDao(context);
+        }
+        return ourInstance;
+    }
+
+    public Realm getRealm(){
+        return realm;
+    }
+
+
+//    public NoteDao(Context context){
+//        realmConfig= new RealmConfiguration.Builder(context).build();
+//        realm = Realm.getInstance(realmConfig);
+//
+//
+//    }
 
     public void close(){
         realm.close();

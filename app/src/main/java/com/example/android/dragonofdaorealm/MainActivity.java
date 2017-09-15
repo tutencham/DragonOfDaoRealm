@@ -16,6 +16,8 @@ import java.util.List;
 
 import data.db.NoteDao;
 import data.pojo.Note;
+import io.realm.Realm;
+import io.realm.internal.Context;
 
 public class MainActivity extends AppCompatActivity {
     private EditText newNoteText;
@@ -34,10 +36,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // inicjalizujemy pola klasy
+//        Realm.setDefaultConfiguration();
         newNoteText = (EditText) findViewById(R.id.new_note_text);
         recyclerView = (RecyclerView) findViewById(R.id.recycler);
         // tworzymy obiekt DAO
-        noteDao = new NoteDao(this);
+        noteDao = new NoteDao();
 
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -87,11 +90,12 @@ public class MainActivity extends AppCompatActivity {
         // gdzie korzystaliśmy z SQLite
     }
 
+
     // usuwa notatkę z bazy i odświeża listę
-    public void removeNote(Note note) {
+  public void removeNote(Note note) {
         myAdapter = new NoteListAdapter(noteDao.getAllNotes(),this);
         recyclerView.setAdapter(myAdapter);
-        noteDao.deleteNoteById(note.getId());
+         noteDao.deleteNoteById(note.getId());
 
 
     }

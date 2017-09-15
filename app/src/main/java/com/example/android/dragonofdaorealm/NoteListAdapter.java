@@ -2,7 +2,7 @@ package com.example.android.dragonofdaorealm;
 
 
 import android.content.Context;
-import android.support.v7.widget.PagerSnapHelper;
+
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,14 +14,25 @@ import com.socks.library.KLog;
 
 import java.util.List;
 
+
 import data.db.NoteDao;
+import data.db.Test;
 import data.pojo.Note;
+import data.realm.NoteRealm;
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
 
 /**
  * Created by Grzesiek on 2017-09-01.
  */
 
 public class NoteListAdapter extends RecyclerView.Adapter {
+
+    public NoteListAdapter(List<Note> noteList, Context contextview) {
+        this.noteList = noteList;
+        this.contextview = contextview;
+
+    }
 
     private List<Note> noteList;
     private Context contextview;
@@ -34,12 +45,7 @@ public class NoteListAdapter extends RecyclerView.Adapter {
 
 
 
-    public NoteListAdapter(List<Note> noteList, Context contextview) {
-        this.noteList = noteList;
-        this.contextview= contextview;
 
-
-    }
 
 
 
@@ -53,11 +59,31 @@ public class NoteListAdapter extends RecyclerView.Adapter {
         LayoutInflater inflater= LayoutInflater.from(contextview);
         View view = inflater.inflate(R.layout.note_layout,parent, false );
         NoteListHolder noteListHolder = new NoteListHolder(view);
+
         return noteListHolder;
     }
-    public void delete (int position){
-        noteList.remove(position);
-        notifyItemRemoved(position);
+    public void delete (final int position){
+
+
+
+        NoteDao.getInstance(contextview).deleteNoteById(position);
+
+
+
+
+
+
+
+//        RealmConfiguration realmConfig= new RealmConfiguration.Builder(contextview).build();
+//        Realm.getInstance(realmConfig).executeTransaction(new Realm.Transaction() {
+//            @Override
+//            public void execute(Realm realm) {
+//                NoteRealm noteRealm =realm.where(NoteRealm.class).equalTo("id", noteList.get(position).getId()).findFirst();
+//                noteRealm.deleteFromRealm();
+//            }
+//        });
+//        noteList.remove(position);
+//        notifyItemRemoved(position);
     }
 
     @Override
