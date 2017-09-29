@@ -1,4 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView
+
+
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+
+    xmlns:android="http://schemas.android.com/apk/res/android" >
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -19,7 +27,7 @@
 
     <Button
         android:id="@+id/add_new_note_button"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="0"
         android:onClick="addNewNote"
@@ -27,23 +35,32 @@
 
     <Button
         android:id="@+id/delete_notes_button"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="0"
         android:onClick="deleteAll"
         android:text="Usuń wszystkie"/>
     <Button
         android:id="@+id/delete_null_notes_button"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="0"
         android:onClick="deleteNullAll"
         android:text="Usuń wszystkie nulle"/>
+    <Button
+        android:id="@+id/show_all_notes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="showAllNotes"
+        android:layout_weight="0"
+        android:text="POkaz wszystkie notatki"
+        />
+
 
 
     <Button
         android:id="@+id/filter_notes"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="0"
         android:onClick="filterNotes"
@@ -51,7 +68,7 @@
 
     <Button
         android:id="@+id/show_realm_notes"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="0"
         android:onClick="showRealmNotes"
@@ -60,7 +77,8 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler"
         android:layout_width="match_parent"
-        android:layout_height="270dp"
+        android:layout_height="match_parent"
         android:isScrollContainer="false"
         android:layout_weight="1"/>
 </LinearLayout>
+</android.support.v4.widget.NestedScrollView>

@@ -16,7 +16,9 @@ import java.util.List;
 
 import data.db.NoteDao;
 import data.pojo.Note;
+import data.realm.NoteRealm;
 import io.realm.Realm;
+import io.realm.RealmConfiguration;
 import io.realm.internal.Context;
 
 public class MainActivity extends AppCompatActivity {
@@ -24,6 +26,27 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private NoteDao noteDao;
     private NoteListAdapter myAdapter;
+//    private static MainActivity ourSecInstance;
+
+    private Realm realm;
+    private RealmConfiguration realmConfig;
+    public MainActivity(android.content.Context context){
+        realmConfig= new RealmConfiguration.Builder(context).build();
+        realm = Realm.getInstance(realmConfig);
+        //realm=Realm.getDefaultInstance();
+    }
+    public MainActivity(){
+
+    }
+
+
+
+//    public static MainActivity getInstance(android.content.Context context) {
+//        if(ourSecInstance==null){
+//            ourSecInstance = new MainActivity(context);
+//        }
+//        return ourSecInstance;
+//    }
 
 
 
@@ -40,11 +63,12 @@ public class MainActivity extends AppCompatActivity {
         newNoteText = (EditText) findViewById(R.id.new_note_text);
         recyclerView = (RecyclerView) findViewById(R.id.recycler);
         // tworzymy obiekt DAO
-        noteDao = new NoteDao();
+        noteDao = new NoteDao(this);
 
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setNestedScrollingEnabled(false);
         // wyświetlamy listę notatek
         reloadNotesList();
         myAdapter = new NoteListAdapter(noteDao.getAllNotes(), this);
@@ -91,17 +115,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    // usuwa notatkę z bazy i odświeża listę
-  public void removeNote(Note note) {
-        myAdapter = new NoteListAdapter(noteDao.getAllNotes(),this);
-        recyclerView.setAdapter(myAdapter);
-         noteDao.deleteNoteById(note.getId());
+//    // usuwa notatkę z bazy i odświeża listę
+//  public void removeNote(Note note) {
+//        myAdapter = new NoteListAdapter(noteDao.getAllNotes(),this);
+//        recyclerView.setAdapter(myAdapter);
+//         noteDao.deleteNoteById(note.getId());
 
 
-    }
+//    }
 
     // pokazuje listę notatek
-    private void reloadNotesList() {
+    public void reloadNotesList() {
         // pobieramy z bazy danych listę notatek
 
         myAdapter = new NoteListAdapter(noteDao.getAllNotes(), this);
@@ -121,10 +145,17 @@ public class MainActivity extends AppCompatActivity {
         reloadNotesList();
     }
 
+    public  void showAllNotes(View view){
+
+
+        reloadNotesList();
+
+
+    }
     public void filterNotes(View view) {
         // pobieramy z bazy danych listę notatek z frazą "filtered"
 
-        myAdapter = new NoteListAdapter(noteDao.getNotesLike("filtered"), this);
+        myAdapter = new NoteListAdapter( noteDao.getNotesLike("filtered"),this );
         recyclerView.setAdapter(myAdapter);
 
         // pobiera wyłącznie notatki, które zawierają frazę "filtered"
@@ -134,4 +165,12 @@ public class MainActivity extends AppCompatActivity {
         // pokazuje listę obiektów typu NoteRealm
 
     }
+        public void showRealmNotes(View view){
+
+    myAdapter = new NoteListAdapter(this,noteDao.getRawNotes());
+            recyclerView.setAdapter(myAdapter);
+
+
+
+}
 }

@@ -2,6 +2,9 @@ package data.db;
 
 import android.content.Context;
 
+import com.example.android.dragonofdaorealm.NoteListAdapter;
+import com.socks.library.KLog;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,8 +35,10 @@ public class NoteDao {
     public NoteDao(Context context){
         realmConfig= new RealmConfiguration.Builder(context).build();
           realm = Realm.getInstance(realmConfig);
-          realm=Realm.getDefaultInstance();
+          //realm=Realm.getDefaultInstance();
     }
+
+
 
     public static NoteDao getInstance(Context context) {
         if(ourInstance==null){
@@ -84,12 +89,9 @@ public class NoteDao {
         realm.executeTransaction(new Realm.Transaction(){
             @Override
             public void execute(Realm realm){
+                KLog.e(id);
                 realm.where(NoteRealm.class).equalTo("id", id).findFirst().deleteFromRealm();
             }
-
-
-
-
         });
     }
     public List<Note> getAllNotes(){
@@ -97,6 +99,7 @@ public class NoteDao {
         NoteMapper mapper = new NoteMapper();
         RealmResults<NoteRealm> all = realm.where(NoteRealm.class).findAll();
         for (NoteRealm noteRealm :all){
+            KLog.e(noteRealm.getId());
             notes.add(mapper.fromRealm(noteRealm));
         }
         return notes;
@@ -119,7 +122,17 @@ public class NoteDao {
         return notes;
     }
     public List<NoteRealm> getRawNotes(){
-        return realm.where(NoteRealm.class).findAllSorted("noteText");
+        List<NoteRealm> polska = new ArrayList<>();
+        RealmResults<NoteRealm> all = realm.where(NoteRealm.class).findAll();
+        for (NoteRealm noteRealm :all){
+
+
+
+            KLog.e(noteRealm.getId());
+
+        }
+        return polska;
+        //return realm.where(NoteRealm.class).findAllSorted("noteText");
 
     }
 
@@ -158,4 +171,5 @@ public class NoteDao {
     }
 
 
+    
 }

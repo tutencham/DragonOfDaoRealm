@@ -3,6 +3,8 @@ package com.example.android.dragonofdaorealm;
 
 import android.content.Context;
 
+import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,11 +18,13 @@ import java.util.List;
 
 
 import data.db.NoteDao;
-import data.db.Test;
+
 import data.pojo.Note;
 import data.realm.NoteRealm;
-import io.realm.Realm;
-import io.realm.RealmConfiguration;
+
+
+import static android.R.attr.id;
+
 
 /**
  * Created by Grzesiek on 2017-09-01.
@@ -28,30 +32,33 @@ import io.realm.RealmConfiguration;
 
 public class NoteListAdapter extends RecyclerView.Adapter {
 
-    public NoteListAdapter(List<Note> noteList, Context contextview) {
+
+
+
+    public NoteListAdapter(List<Note> noteList,Context contextview) {
         this.noteList = noteList;
         this.contextview = contextview;
 
-    }
 
+
+    }
+    public NoteListAdapter(Context contextview,List<NoteRealm> notesRealm) {
+
+        this.contextview = contextview;
+        this.notesRealm= notesRealm;
+
+
+    }
+    private List<NoteRealm> notesRealm;
     private List<Note> noteList;
     private Context contextview;
 
 
 
-
-
-
-
-
-
-
-
-
-
-
     @Override
     public RecyclerView.ViewHolder
+
+
 
 
     onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -66,8 +73,13 @@ public class NoteListAdapter extends RecyclerView.Adapter {
 
 
 
-        NoteDao.getInstance(contextview).deleteNoteById(position);
+        NoteDao.getInstance(contextview).deleteNoteById(noteList.get(position).getId());
 
+        noteList.remove(position);
+        notifyItemRemoved(position);
+        noteList.notifyAll();
+
+        //NoteDao.getInstance(contextview).getAllNotes();
 
 
 
@@ -88,15 +100,20 @@ public class NoteListAdapter extends RecyclerView.Adapter {
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder,  int position) {
+        switch (holder.getItemViewType()) {
+
+            case 0:
+            NoteListHolder myHolder = (NoteListHolder) holder;
 
 
-        NoteListHolder myHolder = (NoteListHolder) holder;
+            myHolder.noteText.setText(noteList.get(position).getNoteText());
+            break;
+            case 1:
+                NoteListHolder myHolderSec = (NoteListHolder) holder;
+              myHolderSec.noteText.setText(notesRealm.get(position).getNoteText());
 
-       myHolder.noteText.setText(noteList.get(position).getNoteText());
 
-
-
-
+        }
 
 
 
@@ -109,8 +126,13 @@ public class NoteListAdapter extends RecyclerView.Adapter {
 
     @Override
     public int getItemCount() {
+        KLog.e(id);
+
+
         return noteList.size();
+
     }
+
 
     public class NoteListHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
@@ -131,12 +153,34 @@ public class NoteListAdapter extends RecyclerView.Adapter {
 
         @Override
         public void onClick(View v) {
+            AlertDialog.Builder builder1 = new AlertDialog.Builder(contextview);
+            builder1.setMessage("Do You really want to delete this note ?");
+            builder1.setCancelable(true);
+
+            builder1.setPositiveButton(
+                    "Yes",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.cancel();
+                            Toast.makeText(contextview, "You deleted note from position: "+getAdapterPosition(), Toast.LENGTH_SHORT).show();
+                            delete(getAdapterPosition());
+
+
+                        }
+                    });
+
+
+
+            AlertDialog alert11 = builder1.create();
+            alert11.show();
             KLog.e("cos sie zjebalo");
-            Toast.makeText(contextview, "Wyjebales cos "+getAdapterPosition(), Toast.LENGTH_SHORT).show();
-            delete(getAdapterPosition());
+
 
 
         }
+
+
+
     }
 
 
