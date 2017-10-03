@@ -30,14 +30,14 @@ public class MainActivity extends AppCompatActivity {
 
     private Realm realm;
     private RealmConfiguration realmConfig;
-    public MainActivity(android.content.Context context){
-        realmConfig= new RealmConfiguration.Builder(context).build();
-        realm = Realm.getInstance(realmConfig);
-        //realm=Realm.getDefaultInstance();
-    }
-    public MainActivity(){
-
-    }
+//    public MainActivity(android.content.Context context){
+//        realmConfig= new RealmConfiguration.Builder(context).build();
+//        realm = Realm.getInstance(realmConfig);
+//        //realm=Realm.getDefaultInstance();
+//    }
+//    public MainActivity(){
+//
+//    }
 
 
 

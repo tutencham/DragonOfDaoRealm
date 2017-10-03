@@ -75,11 +75,15 @@ public class NoteListAdapter extends RecyclerView.Adapter {
 
         NoteDao.getInstance(contextview).deleteNoteById(noteList.get(position).getId());
 
+        NoteDao.getInstance(contextview).getAllNotes();
         noteList.remove(position);
         notifyItemRemoved(position);
-        noteList.notifyAll();
+       // noteList.notifyAll();
+        notifyDataSetChanged();
+        notifyItemRangeChanged(position,getItemCount());
+//        myAdapter = new NoteListAdapter(noteDao.getAllNotes(), this);
+//        recyclerView.setAdapter(myAdapter);
 
-        //NoteDao.getInstance(contextview).getAllNotes();
 
 
 
